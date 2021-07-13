@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Coinyzer | Inscription{% endblock %}
+
+{% block body %}
+    {% include "./components/nav.html.twig" %}
+
+<div class="h-100 d-flex flex-column container text-center p-2">
+    {% for flashError in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
+    {{ form_start(registrationForm, {'attr':{'class':'m-auto w-50'}}) }}
+    
+        <h2 class="mb-3">Inscription</h2>
+        <div class="form-floating mb-3">
+            <input type="text" name="{{registrationForm.pseudo.vars.full_name}}" class="form-control" id="{{registrationForm.pseudo.vars.id}}" aria-describedby="">
+            <label for="{{registrationForm.pseudo.vars.id}}">Pseudo</label>
+            {{ form_errors(registrationForm.pseudo)}} 
+            {% do registrationForm.pseudo.setRendered %}
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="email" name="{{registrationForm.email.vars.full_name}}" class="form-control" id="{{registrationForm.email.vars.id}}" aria-describedby="emailHelp">
+            <label for="{{registrationForm.email.vars.id}}">Email</label>
+            {{ form_errors(registrationForm.email) }}
+            {% do registrationForm.email.setRendered %}
+        </div>
+
+        <div class="form-floating mb-3">
+            {{form_widget(registrationForm.plainPassword)}}
+            <label for="{{registrationForm.plainPassword.vars.id}}">Password</label>
+            {{ form_errors(registrationForm.plainPassword) }}
+            {% do registrationForm.plainPassword.setRendered %}
+        </div>
+
+        <div class="mb-3 form-check">
+            <label for="{{registrationForm.agreeTerms.vars.id}}">
+            <input type="checkbox" name="{{registrationForm.agreeTerms.vars.full_name}}" class="form-check-input" id="{{registrationForm.agreeTerms.vars.id}}">
+            Agree Terms
+            </label>
+            {{ form_errors(registrationForm.agreeTerms) }}
+            {% do registrationForm.agreeTerms.setRendered %}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Sign in</button>
+
+        
+    {{ form_end(registrationForm) }}
+</div>
+{% endblock %}

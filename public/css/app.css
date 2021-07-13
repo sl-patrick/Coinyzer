@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+
+html, body{
+    height: 100%;
+    font-family: Roboto, sans-serif;
+}
+
+.hero{
+    height: 100%;
+    background-image: url('../images/background.jpg');
+    background-position: center;
+    background-size: cover;
+}
+
+.btn-check:focus+.btn, .btn:focus{
+    box-shadow: none;
+}
+
+#contact_message{
+    resize: none;
+    overflow: hidden;
+}

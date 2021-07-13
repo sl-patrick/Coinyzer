@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CryptocurrencyController!{% endblock %}
+
+{% block body %}
+    {% include "./components/nav.html.twig" %}
+
+    <section class="h-100 d-flex flex-column justify-content-center text-center">
+        <div class="container">
+            {# <pre>
+                {{ dump(cryptocurrency) }}
+            </pre> #}
+            <div class="header">
+                <div class="logo mb-3">
+                    <img src=" {{ vich_uploader_asset(cryptocurrency, cryptocurrency.logoFile)}}" alt="logo"> 
+                </div>
+                <h2>{{ cryptocurrency.fullname | upper }}</h2>
+                <p class="text-muted">{{ cryptocurrency.name | upper }}</p>
+            </div>
+            <div class="content">
+                <div class="description">
+                    <p>
+                    Energistically engage revolutionary initiatives before focused metrics. Appropriately transition maintainable alignments vis-a-vis plug-and-play e-tailers. Intrinsicly create cost effective catalysts for change through sticky products. Assertively incentivize leading-edge outsourcing via visionary scenarios. Interactively deploy user friendly methodologies before worldwide markets.
+                    Collaboratively synthesize extensible processes through seamless architectures. Professionally engage dynamic technology before adaptive convergence. Completely transition market positioning intellectual capital and collaborative best practices. Rapidiously expedite cross-platform "outside the box" thinking via cross functional niche markets. Assertively leverage other's extensible "outside the box" thinking without turnkey models.
+                    </p>
+                </div>
+                <div class="links">
+                    <p><a href="#" class="btn btn-light text-decoration-none link-dark">Website </a></p>
+                    <p><a href="#" class="btn btn-light text-decoration-none link-dark">Code source </a></p>
+                    <p><a href="#" class="btn btn-light text-decoration-none link-dark">Whitepaper </a></p>
+                </div>
+
+            </div>
+        </div>
+    
+    </section>
+
+
+
+{% endblock %}
