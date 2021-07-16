@@ -47,9 +47,4 @@ class CryptocurrencyDataRepository extends ServiceEntityRepository
         ;
     }
     */
-
-    // public function updateData()
-    // {
-    //     # code...
-    // }
 }
