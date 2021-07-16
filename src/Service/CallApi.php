@@ -2,10 +2,10 @@
 
 namespace App\Service;
 
+use App\Entity\Cryptocurrencies;
 use App\Entity\CryptocurrencyData;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ParameterBag\ContainerBag;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 class CallApi extends AbstractController {
@@ -53,13 +53,13 @@ class CallApi extends AbstractController {
 
     public function updateCryptocurrencyData()
     {
+        $entityManager = $this->getDoctrine()->getManager();
+
         //récupère toutes les cryptomonnaies en base de données.
-        $product = $this->getDoctrine()
-            ->getRepository(CryptocurrencyData::class)
-            ->findAll();
+        $allData = $entityManager->getRepository(CryptocurrencyData::class)->findAll();
         
         //pour chaque cryptomonnaies je garde le nom que j'insère dans un tableau.
-        foreach ($product as $value) {
+        foreach ($allData as $value) {
             $name[] = $value->getCryptocurrencies()->getName();
             $currency = $value->getCurrency();
         }
@@ -68,13 +68,26 @@ class CallApi extends AbstractController {
         $arrayToString = implode(",", $name);
 
         //recupère les données 
-        $data = $this->requestApi($arrayToString, $currency);
-        dump($data);
+        $getData = $this->requestApi($arrayToString, $currency);
 
         //Pour chaque entrée du tableau mettre à jour les valeurs.
-        
-        
-        
+        foreach ($getData as $key => $value) {
+
+            //Gérer la casse chaîne de caractères
+            $cryptocurrencyByName = $entityManager->getRepository(Cryptocurrencies::class)->findOneBy(['name' => strtolower($key)]);
+
+            $cryptocurrency = $entityManager->getRepository(CryptocurrencyData::class)->findBy(['cryptocurrencies' => $cryptocurrencyByName->getId()]);
+            
+            $cryptocurrency[0]->setCurrency($value[$currency]['TOSYMBOL']);
+            $cryptocurrency[0]->setPrice($value[$currency]['PRICE']);
+            $cryptocurrency[0]->setMarketCap($value[$currency]['MKTCAP']);
+            $cryptocurrency[0]->setVolume24h($value[$currency]['VOLUME24HOURTO']);
+            $cryptocurrency[0]->setCirculatingSupply($value[$currency]['SUPPLY']);
+            $cryptocurrency[0]->setUpdateAt(new \DateTimeImmutable("now"));
+            
+            $entityManager->flush();
+
+        }
         
     }
 
