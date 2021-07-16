@@ -10,7 +10,6 @@ use App\Repository\CryptocurrenciesRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CryptocurrencyDataRepository;
-use App\Service\CallApi;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CryptocurrencyController extends AbstractController
@@ -18,10 +17,10 @@ class CryptocurrencyController extends AbstractController
     /**
      * @Route("/cryptocurrencies", name="app_cryptocurrenciesRank")
      */
-    public function rank(CryptocurrencyDataRepository $cryptocurrencyDataRepository, CallApi $api): Response
+    public function rank(CryptocurrencyDataRepository $cryptocurrencyDataRepository): Response
     {
         $allCryptocurrencies = $cryptocurrencyDataRepository->findAll();
-        dump($api->updateCryptocurrencyData());
+
         
         return $this->render('cryptocurrency/index.html.twig', [
             'cryptocurrencies' => $allCryptocurrencies,
