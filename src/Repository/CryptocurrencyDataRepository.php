@@ -47,4 +47,12 @@ class CryptocurrencyDataRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findByMarketCapGreater()
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.market_cap', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }
