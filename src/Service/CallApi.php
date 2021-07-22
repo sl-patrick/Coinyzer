@@ -18,7 +18,7 @@ class CallApi extends AbstractController {
         $this->_params = $params;
     }
 
-    private function requestApi(string $name, string $currency): array
+    private function requestApi(string $name, string $currency = 'EUR'): array
     {
         $apiKey = $this->_params->get('CRYPTOCOMPARE_API');
         $response = $this->_client->request(
@@ -34,7 +34,7 @@ class CallApi extends AbstractController {
         return $data['RAW'];
     }
 
-    public function fetchCryptocurrencyData(string $name, string $currency)
+    public function fetchCryptocurrencyData(string $name, string $currency = 'EUR')
     {        
         $data = $this->requestApi($name, $currency);
 
@@ -84,10 +84,10 @@ class CallApi extends AbstractController {
             $cryptocurrency[0]->setVolume24h($value[$currency]['VOLUME24HOURTO']);
             $cryptocurrency[0]->setCirculatingSupply($value[$currency]['SUPPLY']);
             $cryptocurrency[0]->setUpdateAt(new \DateTimeImmutable("now"));
-            
+    
             $entityManager->flush();
-
         }
+        
         
     }
 
