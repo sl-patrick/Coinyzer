@@ -6,10 +6,12 @@ use App\Entity\Watchlists;
 use App\Entity\Cryptocurrencies;
 use App\Repository\WatchlistsRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CryptocurrenciesRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CryptocurrencyDataRepository;
+use App\Service\CallApi;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CryptocurrencyController extends AbstractController
@@ -19,7 +21,8 @@ class CryptocurrencyController extends AbstractController
      */
     public function rank(CryptocurrencyDataRepository $cryptocurrencyDataRepository): Response
     {
-        $allCryptocurrencies = $cryptocurrencyDataRepository->findAll();
+        $allCryptocurrencies = $cryptocurrencyDataRepository->findByMarketCapGreater();
+        // dd($allCryptocurrencies);
 
         
         return $this->render('cryptocurrency/index.html.twig', [
@@ -105,5 +108,21 @@ class CryptocurrencyController extends AbstractController
                 }  
             }
         } 
+    }
+
+    /**
+     * Undocumented function
+     *@Route("/cryptocurrencies/refresh", name="app_cryptocurrenciesRefresh", methods={"POST"})
+     */
+    public function updateByUser(Request $request, CallApi $callApi)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // dd(true);
+            $data = $callApi->updateCryptocurrencyData();
+        }
+
+        return $this->json(['message' => 'refresh'], 200);
+
+    
     }
 }
