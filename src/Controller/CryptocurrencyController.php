@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Service\CallApi;
 use App\Entity\Watchlists;
 use App\Entity\Cryptocurrencies;
+use App\Entity\CryptocurrencyData;
 use App\Repository\WatchlistsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -20,11 +21,19 @@ class CryptocurrencyController extends AbstractController
     /**
      * @Route("/cryptocurrencies", name="app_cryptocurrenciesRank")
      */
-    public function rank(CryptocurrencyDataRepository $cryptocurrencyDataRepository, PaginatorInterface $paginator, Request $request): Response
+    public function rank(CryptocurrencyDataRepository $cryptocurrencyDataRepository, PaginatorInterface $paginator, Request $request, EntityManagerInterface $em): Response
     {
-        $allCryptocurrencies = $cryptocurrencyDataRepository->findByMarketCapGreater();
+        // $allCryptocurrencies = $cryptocurrencyDataRepository->findAll();
+        // $pagination = $paginator->paginate($allCryptocurrencies, $request->query->getInt('page', 1), 3);
 
-        $pagination = $paginator->paginate($allCryptocurrencies, $request->query->getInt('page', 1), 3);
+        $dql   = "SELECT a FROM App\Entity\CryptocurrencyData a ORDER BY a.market_cap DESC ";
+        $query = $em->createQuery($dql);
+    
+        $pagination = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            3 /*limit per page*/
+        );
         
         return $this->render('cryptocurrency/index.html.twig', [
             'cryptocurrencies' => $pagination,
