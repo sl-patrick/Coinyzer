@@ -2,16 +2,17 @@
 
 namespace App\Controller;
 
+use App\Service\CallApi;
 use App\Entity\Watchlists;
 use App\Entity\Cryptocurrencies;
 use App\Repository\WatchlistsRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CryptocurrenciesRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CryptocurrencyDataRepository;
-use App\Service\CallApi;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CryptocurrencyController extends AbstractController
@@ -19,14 +20,14 @@ class CryptocurrencyController extends AbstractController
     /**
      * @Route("/cryptocurrencies", name="app_cryptocurrenciesRank")
      */
-    public function rank(CryptocurrencyDataRepository $cryptocurrencyDataRepository): Response
+    public function rank(CryptocurrencyDataRepository $cryptocurrencyDataRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $allCryptocurrencies = $cryptocurrencyDataRepository->findByMarketCapGreater();
-        // dd($allCryptocurrencies);
 
+        $pagination = $paginator->paginate($allCryptocurrencies, $request->query->getInt('page', 1), 3);
         
         return $this->render('cryptocurrency/index.html.twig', [
-            'cryptocurrencies' => $allCryptocurrencies,
+            'cryptocurrencies' => $pagination,
         ]);
     }
 
