@@ -114,14 +114,45 @@ class CryptocurrencyController extends AbstractController
      * Undocumented function
      *@Route("/cryptocurrencies/refresh", name="app_cryptocurrenciesRefresh", methods={"POST"})
      */
-    public function updateByUser(Request $request, CallApi $callApi)
+    public function updateByUser(Request $request, CallApi $callApi, CryptocurrencyDataRepository $cryptocurrencyDataRepository)
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // dd(true);
-            $data = $callApi->updateCryptocurrencyData();
-        }
+        
+        $data = [];
 
-        return $this->json(['message' => 'refresh'], 200);
+        $callApi->updateCryptocurrencyData();
+
+        $cryptocurrencies = $cryptocurrencyDataRepository->findByMarketCapGreater();
+
+        $contents = $this->renderView('components/table_rank.html.twig', [
+            'cryptocurrencies' => $cryptocurrencies,
+            
+        ]);
+
+        $json = json_encode($contents);
+
+        dd($json);
+
+
+        
+        // ob_start();
+        // require '../templates/components/table_rank.html.twig';
+        // $table = ob_get_contents();
+        // ob_get_clean();
+        // $data = json_encode($table);
+
+
+
+        // foreach ($cryptocurrencies as $key => $value) {
+        //     $data[$key]['name'] = $value->getCryptocurrencies()->getName();
+        //     $data[$key]['fullname'] = $value->getCryptocurrencies()->getFullname();
+        //     $data[$key]['price'] = $value->getPrice();
+        //     $data[$key]['market_cap'] = $value->getMarketCap();
+        //     $data[$key]['volume'] = $value->getVolume24h();
+        //     $data[$key]['supply'] = $value->getCirculatingSupply();
+        //     $data[$key]['update_at'] = $value->getUpdateAt();   
+        // }
+        
+        return $this->json($data);
 
     
     }
