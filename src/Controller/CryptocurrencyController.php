@@ -26,7 +26,8 @@ class CryptocurrencyController extends AbstractController
         // $allCryptocurrencies = $cryptocurrencyDataRepository->findAll();
         // $pagination = $paginator->paginate($allCryptocurrencies, $request->query->getInt('page', 1), 3);
 
-        $dql   = "SELECT a FROM App\Entity\CryptocurrencyData a ORDER BY a.market_cap DESC ";
+        // $dql   = "SELECT a FROM App\Entity\CryptocurrencyData a ORDER BY a.market_cap DESC ";
+        $dql = "SELECT a, b FROM App\Entity\CryptocurrencyData a JOIN a.cryptocurrencies b WHERE a.cryptocurrencies = b.id ORDER BY a.market_cap DESC";
         $query = $em->createQuery($dql);
     
         $pagination = $paginator->paginate(
@@ -34,6 +35,7 @@ class CryptocurrencyController extends AbstractController
             $request->query->getInt('page', 1), /*page number*/
             3 /*limit per page*/
         );
+
         
         return $this->render('cryptocurrency/index.html.twig', [
             'cryptocurrencies' => $pagination,
