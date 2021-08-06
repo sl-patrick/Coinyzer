@@ -11,7 +11,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{% set classment = 1 %}
+		{% set rank = cryptocurrencies.getItemNumberPerPage * (cryptocurrencies.getPaginationData.current - 1) + 1 %}
 		{% for item in cryptocurrencies %}
 			<tr>
 				<th scope="row">
@@ -23,8 +23,8 @@
 						{% endif %}
 					</a>
 				</th>
-				<td class="classment">
-					{{classment}}
+				<td class="rank">
+					{{rank}}
 				</td>
 				<td class="fullname text-left">
 					<a href=" {{ path('app_CryptocurrencyOverview', {slug: item.cryptocurrencies.fullName }) }} " class="text-decoration-none link-dark">
@@ -46,7 +46,7 @@
 					<span>{{item.cryptocurrencies.name|upper}}</span>
 				</td>
 			</tr>
-			{% set classment = classment + 1 %}
+			{% set rank = rank + 1 %}
 		{% endfor %}
 	</tbody>
 </table>
