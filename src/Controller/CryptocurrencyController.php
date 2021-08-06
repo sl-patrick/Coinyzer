@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CryptocurrencyDataRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CryptocurrencyController extends AbstractController
 {
@@ -25,7 +26,7 @@ class CryptocurrencyController extends AbstractController
     {
         // $allCryptocurrencies = $cryptocurrencyDataRepository->findAll();
         // $pagination = $paginator->paginate($allCryptocurrencies, $request->query->getInt('page', 1), 3);
-
+        // limite par page * page + 1
         // $dql   = "SELECT a FROM App\Entity\CryptocurrencyData a ORDER BY a.market_cap DESC ";
         $dql = "SELECT a, b FROM App\Entity\CryptocurrencyData a JOIN a.cryptocurrencies b WHERE a.cryptocurrencies = b.id ORDER BY a.market_cap DESC";
         $query = $em->createQuery($dql);
@@ -126,46 +127,23 @@ class CryptocurrencyController extends AbstractController
      * Undocumented function
      *@Route("/cryptocurrencies/refresh", name="app_cryptocurrenciesRefresh", methods={"POST"})
      */
-    public function updateByUser(Request $request, CallApi $callApi, CryptocurrencyDataRepository $cryptocurrencyDataRepository)
+    public function updateByUser(Request $request, CallApi $callApi, PaginatorInterface $paginator, EntityManagerInterface $em)
     {
         
-        $data = [];
-
         $callApi->updateCryptocurrencyData();
 
-        $cryptocurrencies = $cryptocurrencyDataRepository->findByMarketCapGreater();
+        $dql = "SELECT a, b FROM App\Entity\CryptocurrencyData a JOIN a.cryptocurrencies b WHERE a.cryptocurrencies = b.id ORDER BY a.market_cap DESC";
+        $query = $em->createQuery($dql);
+    
+        $cryptocurrencies = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            3 /*limit per page*/
+        );
 
-        $contents = $this->renderView('components/table_rank.html.twig', [
-            'cryptocurrencies' => $cryptocurrencies,
-            
-        ]);
-
-        $json = json_encode($contents);
-
-        dd($json);
-
-
+        $contents = $this->render('components/table_rank.html.twig', ['cryptocurrencies' => $cryptocurrencies,])->getContent();
         
-        // ob_start();
-        // require '../templates/components/table_rank.html.twig';
-        // $table = ob_get_contents();
-        // ob_get_clean();
-        // $data = json_encode($table);
-
-
-
-        // foreach ($cryptocurrencies as $key => $value) {
-        //     $data[$key]['name'] = $value->getCryptocurrencies()->getName();
-        //     $data[$key]['fullname'] = $value->getCryptocurrencies()->getFullname();
-        //     $data[$key]['price'] = $value->getPrice();
-        //     $data[$key]['market_cap'] = $value->getMarketCap();
-        //     $data[$key]['volume'] = $value->getVolume24h();
-        //     $data[$key]['supply'] = $value->getCirculatingSupply();
-        //     $data[$key]['update_at'] = $value->getUpdateAt();   
-        // }
-        
-        return $this->json($data);
-
+        return new JsonResponse($contents);
     
     }
 }
