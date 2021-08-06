@@ -3,11 +3,11 @@
 		<tr>
 			<th scope="col"></th>
 			<th scope="col">#</th>
-			<th scope="col">Name</th>
-			<th scope="col">Price</th>
-			<th scope="col">Market Cap</th>
-			<th scope="col">Volume</th>
-			<th scope="col" class="text-nowrap">Circulating Supply</th>
+			<th scope="col">{{ knp_pagination_sortable(cryptocurrencies, 'Name', 'b.fullname')}}</th>
+			<th scope="col">{{ knp_pagination_sortable(cryptocurrencies, 'Price', 'a.price')}}</th>
+			<th scope="col">{{ knp_pagination_sortable(cryptocurrencies, 'Market Cap', 'a.market_cap')}}</th>
+			<th scope="col">{{ knp_pagination_sortable(cryptocurrencies, 'Volume', 'a.volume_24h')}}</th>
+			<th scope="col" class="text-nowrap">{{ knp_pagination_sortable(cryptocurrencies, 'Circulating Supply', 'a.circulating_supply')}}</th>
 		</tr>
 	</thead>
 	<tbody>
