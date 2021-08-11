@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CryptocurrencyController!{% endblock %}
+{% block title %}Coinyzer | Classements{% endblock %}
 
 {% block body %}
     {% include "./components/nav.html.twig" %}
@@ -12,11 +12,11 @@
                 <ul class="nav nav-tabs">
 
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Classement</a>
+                        <a class="nav-link rank active" aria-current="page" href="#">Classement</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href=" {{ path('app_cryptocurrenciesWatchlist')}} ">Favoris</a>
+                        <a class="nav-link watchlist" href=" {{ path('app_cryptocurrenciesWatchlist')}} ">Favoris</a>
                     </li>
                 </ul>
             {% endif %}
@@ -38,6 +38,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{asset('js/getData.js')}} "></script>
+    <script src=" {{asset('js/tableWatchlist.js')}} "></script>
     <script>
         let btn = document.querySelectorAll('.add-watchlist');
 
