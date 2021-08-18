@@ -53,6 +53,11 @@ class CryptocurrencyData
      */
     private $update_at;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastUpdateAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -138,6 +143,18 @@ class CryptocurrencyData
     public function setUpdateAt(\DateTimeInterface $update_at): self
     {
         $this->update_at = $update_at;
+
+        return $this;
+    }
+
+    public function getLastUpdateAt(): ?\DateTimeInterface
+    {
+        return $this->lastUpdateAt;
+    }
+
+    public function setLastUpdateAt(?\DateTimeInterface $lastUpdateAt): self
+    {
+        $this->lastUpdateAt = $lastUpdateAt;
 
         return $this;
     }
