@@ -31,6 +31,11 @@
 								<li>
 									<a class="dropdown-item" href="{{path('app_admin')}}">Dashboard</a>
 								</li>
+								elseif
+							{% elseif is_granted('ROLE_USER') == true %}
+								<li>
+									<a class="dropdown-item" href="{{path('app_admin')}}">Dashboard</a>
+								</li>
 							{% endif %}
 							<li>
 								<a class="nav-link btn btn-sm btn-outline-secondary" role="button" href="{{ path('app_logout') }}">Logout</a>
