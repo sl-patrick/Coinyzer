@@ -30,12 +30,11 @@ class DashboardController extends AbstractDashboardController
     
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToRoute('Coinyzer', 'fa fa-home', 'app_home');
+        yield MenuItem::linkToRoute('Home', 'fa fa-home', 'app_home');
 
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
         yield MenuItem::linkToCrud('Cryptocurrencies', 'fab fa-bitcoin', Cryptocurrencies::class);
         yield MenuItem::linkToCrud('Users', 'fa fa-users', Users::class);
-        yield MenuItem::section('Contact');
         yield MenuItem::section('Watchlist');
 
     }
