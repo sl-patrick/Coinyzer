@@ -14,6 +14,7 @@ use App\Repository\CryptocurrenciesRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CryptocurrencyDataRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -129,18 +130,47 @@ class CryptocurrencyController extends AbstractController
      */
     public function updateByUser(Request $request, CallApi $callApi, PaginatorInterface $paginator, EntityManagerInterface $em)
     {
+        //recupere le temps actuel
+        $currentTime = time();
         
-        $callApi->updateCryptocurrencyData();
+        //recupere la date de la derniere mise a jour
+        $lastUpdateData = $em->getRepository(CryptocurrencyData::class)->findAll();
+        
+        foreach ($lastUpdateData as $value) {
+            $time = $value->getUpdateAt();
+        }
 
-        $dql = "SELECT a, b FROM App\Entity\CryptocurrencyData a JOIN a.cryptocurrencies b WHERE a.cryptocurrencies = b.id ORDER BY a.market_cap DESC";
-        $query = $em->createQuery($dql);
+        //transformer la date de la derniere mise a jour en timestamp
+        $timeToString = date_format($time, 'Y-m-d H:i:s');
+
+        $timeToTimestamp = strtotime($timeToString);
+
+        //si la derniere mise a jour + 30 secondes est egal au temps actuel ou est inferieur -> autoriser la mise a jour
+        if ($timeToTimestamp + 30 === $currentTime OR $timeToTimestamp + 30 < $currentTime) {
+            
+            $callApi->updateCryptocurrencyData();
     
-        $cryptocurrencies = $paginator->paginate(
-            $query, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            3 /*limit per page*/
-        );
+            $dql = "SELECT a, b FROM App\Entity\CryptocurrencyData a JOIN a.cryptocurrencies b WHERE a.cryptocurrencies = b.id ORDER BY a.market_cap DESC";
+            $query = $em->createQuery($dql);
+        
+            $cryptocurrencies = $paginator->paginate(
+                $query, /* query NOT result */
+                $request->query->getInt('page', 1), /*page number*/
+                3 /*limit per page*/
+            );
 
+        } else {
+
+            $dql = "SELECT a, b FROM App\Entity\CryptocurrencyData a JOIN a.cryptocurrencies b WHERE a.cryptocurrencies = b.id ORDER BY a.market_cap DESC";
+            $query = $em->createQuery($dql);
+        
+            $cryptocurrencies = $paginator->paginate(
+                $query, /* query NOT result */
+                $request->query->getInt('page', 1), /*page number*/
+                3 /*limit per page*/
+            );
+        }
+        
         $contents = $this->render('components/table_rank.html.twig', ['cryptocurrencies' => $cryptocurrencies,])->getContent();
         
         return new JsonResponse($contents);
