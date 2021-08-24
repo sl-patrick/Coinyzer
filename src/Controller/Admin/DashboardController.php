@@ -14,8 +14,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class DashboardController extends AbstractDashboardController
 {
     /**
-     * @Security("is_granted('ROLE_ADMIN')")
-     * @Route("/cnz_admin", name="app_admin")
+     * @Security("is_granted('ROLE_USER')")
+     * @Route("/profile", name="app_admin")
      */
     public function index(): Response
     {
@@ -26,16 +26,17 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('Coinyzer');
+            // ->renderSidebarMinimized();
     }
     
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToRoute('Home', 'fa fa-home', 'app_home');
-
-        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
-        yield MenuItem::linkToCrud('Cryptocurrencies', 'fab fa-bitcoin', Cryptocurrencies::class);
-        yield MenuItem::linkToCrud('Users', 'fa fa-users', Users::class);
-        yield MenuItem::section('Watchlist');
+        yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
+        yield MenuItem::linkToCrud('Cryptomonnaies', 'fab fa-bitcoin fa-3x', Cryptocurrencies::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', Users::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linktoRoute('Favoris', 'fas fa-star', 'app_favoris');
+        yield MenuItem::linkToRoute('Retourner sur le site', 'fas fa-reply', 'app_home');
 
     }
+    
 }
