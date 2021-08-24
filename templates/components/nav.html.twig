@@ -27,14 +27,9 @@
 								<i class="fas fa-user"></i>
 						</button>	
 						<ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="dropdownMenuLink">
-							{% if is_granted('ROLE_ADMIN') == true %}
+							{% if is_granted('ROLE_USER') == true %}
 								<li>
 									<a class="dropdown-item" href="{{path('app_admin')}}">Dashboard</a>
-								</li>
-								elseif
-							{% elseif is_granted('ROLE_USER') == true %}
-								<li>
-									<a class="dropdown-item" href="{{path('app_profile')}}">Dashboard</a>
 								</li>
 							{% endif %}
 							<li>
