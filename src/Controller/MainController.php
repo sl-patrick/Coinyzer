@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Contact;
 use App\Entity\Cryptocurrencies;
 use App\Form\ContactType;
 use App\Form\SearchCryptocurrencyType;
@@ -53,30 +52,24 @@ class MainController extends AbstractController
      */
     public function contact(Request $request, MailerInterface $mailer): Response
     {
-        $contact = new Contact();
-        $form = $this->createForm(ContactType::class, $contact);
+        $form = $this->createForm(ContactType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() AND $form->isValid()) {
             $contact = $form->getData();
-            dump($contact->getEmail());
 
             // envoie du mail 
             $email = (new Email())
-                ->from($contact->getEmail())
+                ->from($contact['email'])
                 ->to(new Address('contact@coinyzer.com', 'Coinyzer'))
-                ->subject('contacte support')
+                ->subject('support')
                 ->text('Lorem ipsum...');
             
             $mailer->send($email);
-            dump($email);
 
             //message pour l'utilisateur.
-            $this->addFlash('success', 'Votre message à bien été enregistré');
+            $this->addFlash('success', 'Merci de votre message ! Notre équipe vous répondra dans les meilleurs délais.');
             
-            // return $this->redirectToRoute('app_contact');
-            // $contact->setCreatedAt(new \DateTime);
-            // dd($form);
         }
 
 
