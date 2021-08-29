@@ -6,7 +6,14 @@ table.addEventListener('click', function(e) {
     const xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function () {
 		if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-			console.log(this.response);
+			// console.log(this.response);
+			let favoris = this.response;
+			let rank = document.querySelector('.rank');
+			rank.classList.remove("active");
+			table.classList.add("active");
+			let placementTab = document.querySelector('.table');
+			placementTab.innerHTML = favoris;
+
 		}
 	};
 	xhr.open("POST", url, true);
