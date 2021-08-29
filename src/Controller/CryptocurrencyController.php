@@ -47,16 +47,36 @@ class CryptocurrencyController extends AbstractController
     /**
      * Undocumented function
      * 
-     * @Route("/cryptocurrencies/userWatchlist", name="app_cryptocurrenciesWatchlist")
+     * @Route("/cryptocurrencies/watchlist", name="app_cryptocurrenciesWatchlist")
      */
-    public function showWatchlist()
+    public function showWatchlist(WatchlistsRepository $wr, EntityManagerInterface $em, PaginatorInterface $paginator, Request $request)
     {
         //vérifier si l'utilisateur est connecté.
         $user = $this->getUser();
         
-
         //récupérer les cryptomonnaies dans la watchlist de l'utilisateur.
+        $userWatchlist = $wr->findOneBy(['users' => $user]);
+        $result = $userWatchlist->getCryptocurrencies()->getValues();
+        // dd($result);
+
+        foreach ($result as $value) {
+            $id[] = $value->getId();
+        }
+
+        $dql = "SELECT a FROM App\Entity\CryptocurrencyData a WHERE a.id IN (SELECT wl.cryptocurrencies FROM App\Entity\Watchlists wl WHERE wl.users = 1) ";
+        $query = $em->createQuery($dql);
+
+        $pagination = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            3 /*limit per page*/
+        );
+
         //afficher les cryptomonnaies.
+        $contents = $this->render('components/table_rank.html.twig', ['cryptocurrencies' => $pagination,])->getContent();
+
+        return new JsonResponse($contents);
+
     }
 
     /**
