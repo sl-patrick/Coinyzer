@@ -34,7 +34,6 @@ final class Version20210414154925 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE watchlists_cryptocurrencies DROP CONSTRAINT FK_5B9C3ECF10903775');
         $this->addSql('DROP SEQUENCE watchlists_id_seq CASCADE');
         $this->addSql('DROP TABLE watchlists');
