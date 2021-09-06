@@ -51,6 +51,12 @@ class Users implements UserInterface
      */
     private $watchlists;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Cryptocurrencies::class)
+     *
+     */
+    private $favorites;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -172,4 +178,16 @@ class Users implements UserInterface
 
         return $this;
     }
+
+    public function getFavorite()
+    {
+        return $this->favorites;
+    }
+
+    public function setFavorite(Cryptocurrencies $cryptocurrencies)
+    {
+        $this->favorites = $cryptocurrencies;
+        return $this;
+    }
+
 }
