@@ -53,11 +53,6 @@ class Cryptocurrencies
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Watchlists::class, mappedBy="cryptocurrencies")
-     */
-    private $watchlists;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $website;
@@ -94,7 +89,6 @@ class Cryptocurrencies
 
     public function __construct()
     {
-        $this->watchlists = new ArrayCollection();
         $this->currency_data = new ArrayCollection();
     }
 
@@ -166,33 +160,6 @@ class Cryptocurrencies
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Watchlists[]
-     */
-    public function getWatchlists(): Collection
-    {
-        return $this->watchlists;
-    }
-
-    public function addWatchlist(Watchlists $watchlist): self
-    {
-        if (!$this->watchlists->contains($watchlist)) {
-            $this->watchlists[] = $watchlist;
-            $watchlist->addCryptocurrency($this);
-        }
-
-        return $this;
-    }
-
-    public function removeWatchlist(Watchlists $watchlist): self
-    {
-        if ($this->watchlists->removeElement($watchlist)) {
-            $watchlist->removeCryptocurrency($this);
-        }
 
         return $this;
     }
@@ -305,20 +272,20 @@ class Cryptocurrencies
     }
 
    
-    public function likedByUser(Users $user)
-    {
-        foreach ($this->watchlists as $watchlist) {
+    // public function likedByUser(Users $user)
+    // {
+    //     foreach ($this->watchlists as $watchlist) {
 
-            //Si une watchlist correspond à la watchlist de l'utilisateur.
-            if ($watchlist === $user->getWatchlists()) {
+    //         //Si une watchlist correspond à la watchlist de l'utilisateur.
+    //         if ($watchlist === $user->getWatchlists()) {
                 
-                return true;
-            } else {
+    //             return true;
+    //         } else {
                 
-                return false;
+    //             return false;
                 
-            }   
-        }
-    }
+    //         }   
+    //     }
+    // }
     
 }

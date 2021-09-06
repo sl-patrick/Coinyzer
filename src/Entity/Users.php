@@ -47,11 +47,6 @@ class Users implements UserInterface
     private $isVerified = false;
 
     /**
-     * @ORM\OneToOne(targetEntity=Watchlists::class, mappedBy="users", cascade={"persist", "remove"})
-     */
-    private $watchlists;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Cryptocurrencies::class)
      *
      */
@@ -158,23 +153,6 @@ class Users implements UserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
-
-        return $this;
-    }
-
-    public function getWatchlists(): ?Watchlists
-    {
-        return $this->watchlists;
-    }
-
-    public function setWatchlists(Watchlists $watchlists): self
-    {
-        // set the owning side of the relation if necessary
-        if ($watchlists->getUsers() !== $this) {
-            $watchlists->setUsers($this);
-        }
-
-        $this->watchlists = $watchlists;
 
         return $this;
     }
