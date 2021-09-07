@@ -14,30 +14,16 @@
 						<a class="nav-link" href="{{ path('app_cryptocurrenciesRank') }}">CLASSEMENTS</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">FORUM</a>
-					</li>
-					<li class="nav-item">
 						<a class="nav-link" href=" {{ path('app_contact')}} ">CONTACT</a>
 					</li>
+					{% if is_granted('ROLE_USER') %}
+						<li class="nav-item">
+							<a href="{{path('app_admin')}}" class="nav-link"><i class="fas fa-user"></i></a>
+						</li>
+					{% endif %}
 				</ul>
-				<form class="d-flex gap-2">
-					{% if is_granted('ROLE_USER') == true %}
-					<div class="dropdown">
-						<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-								<i class="fas fa-user"></i>
-						</button>	
-						<ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="dropdownMenuLink">
-							{% if is_granted('ROLE_USER') == true %}
-								<li>
-									<a class="dropdown-item" href="{{path('app_admin')}}">Dashboard</a>
-								</li>
-							{% endif %}
-							<li>
-								<a class="nav-link btn btn-sm btn-outline-secondary" role="button" href="{{ path('app_logout') }}">Logout</a>
-							</li>
-						</ul>
-					</div>
-					{% elseif is_granted('ROLE_USER') == false %}
+				<form class="d-flex gap-2">					
+					{% if is_granted('ROLE_USER') == false %}
 						<a class="nav-link btn btn-sm btn-outline-secondary" role="button" href="{{ path('app_login') }}">Log in</a>
 						<a class="nav-link btn btn-sm btn-outline-secondary" role="button" href="{{ path('app_register') }}">Sign up</a>
 					{% endif %}
