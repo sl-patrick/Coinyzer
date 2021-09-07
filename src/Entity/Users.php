@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UsersRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -49,14 +47,10 @@ class Users implements UserInterface
     private $isVerified = false;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Cryptocurrencies::class, inversedBy="users")
+     * @ORM\ManyToMany(targetEntity=Cryptocurrencies::class)
+     *
      */
-    private $watchlist;
-
-    public function __construct()
-    {
-        $this->watchlist = new ArrayCollection();
-    }
+    private $favorites;
 
     public function getId(): ?int
     {
@@ -163,27 +157,14 @@ class Users implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Cryptocurrencies[]
-     */
-    public function getWatchlist(): Collection
+    public function getFavorite()
     {
-        return $this->watchlist;
+        return $this->favorites;
     }
 
-    public function addWatchlist(Cryptocurrencies $watchlist): self
+    public function setFavorite(Cryptocurrencies $cryptocurrencies)
     {
-        if (!$this->watchlist->contains($watchlist)) {
-            $this->watchlist[] = $watchlist;
-        }
-
-        return $this;
-    }
-
-    public function removeWatchlist(Cryptocurrencies $watchlist): self
-    {
-        $this->watchlist->removeElement($watchlist);
-
+        $this->favorites = $cryptocurrencies;
         return $this;
     }
 
