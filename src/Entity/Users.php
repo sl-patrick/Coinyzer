@@ -52,6 +52,11 @@ class Users implements UserInterface
      */
     private $favorites;
 
+    /**
+     * @var string
+     */
+    private $plainPassword;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -168,4 +173,14 @@ class Users implements UserInterface
         return $this;
     }
 
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainPassword): Users
+    {
+        $this->plainPassword = $plainPassword;
+        return $this;
+    }
 }
