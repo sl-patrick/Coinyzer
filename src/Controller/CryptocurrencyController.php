@@ -3,10 +3,8 @@
 namespace App\Controller;
 
 use App\Service\CallApi;
-use App\Entity\Watchlists;
 use App\Entity\Cryptocurrencies;
 use App\Entity\CryptocurrencyData;
-use App\Repository\WatchlistsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +12,6 @@ use App\Repository\CryptocurrenciesRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CryptocurrencyDataRepository;
-use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -23,15 +20,10 @@ class CryptocurrencyController extends AbstractController
     /**
      * @Route("/cryptocurrencies", name="app_cryptocurrenciesRank")
      */
-    public function rank(CryptocurrencyDataRepository $cryptocurrencyDataRepository, PaginatorInterface $paginator, Request $request, EntityManagerInterface $em): Response
+    public function rank(CryptocurrencyDataRepository $cryptocurrencyDataRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        // $allCryptocurrencies = $cryptocurrencyDataRepository->findAll();
-        // $pagination = $paginator->paginate($allCryptocurrencies, $request->query->getInt('page', 1), 3);
-        // limite par page * page + 1
-        // $dql   = "SELECT a FROM App\Entity\CryptocurrencyData a ORDER BY a.market_cap DESC ";
-        $dql = "SELECT a, b FROM App\Entity\CryptocurrencyData a JOIN a.cryptocurrencies b WHERE a.cryptocurrencies = b.id ORDER BY a.market_cap DESC";
-        $query = $em->createQuery($dql);
-    
+        $query = $cryptocurrencyDataRepository->fetchData();
+        
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
@@ -45,26 +37,21 @@ class CryptocurrencyController extends AbstractController
     }
 
     /**
-     * Undocumented function
-     * 
-     * @Route("/cryptocurrencies/watchlist", name="app_cryptocurrenciesWatchlist")
+     * @Route("/watchlist", name="app_cryptocurrenciesWatchlist")
      */
-    public function showWatchlist(WatchlistsRepository $wr, EntityManagerInterface $em, PaginatorInterface $paginator, Request $request)
+    public function showWatchlist(PaginatorInterface $paginator, Request $request, CryptocurrencyDataRepository $cryptocurrencyDataRepository)
     {
-        //vérifier si l'utilisateur est connecté.
         $user = $this->getUser();
         
-        //récupérer les cryptomonnaies dans la watchlist de l'utilisateur.
-        $userWatchlist = $wr->findOneBy(['users' => $user]);
-        $result = $userWatchlist->getCryptocurrencies()->getValues();
-        // dd($result);
-
-        foreach ($result as $value) {
-            $id[] = $value->getId();
+        $watchlist = $user->getWatchlist()->getValues();
+        
+        foreach ($watchlist as $value) {
+            $ids[] = $value->getId();
         }
+        
+        $arrayToString = implode(",", $ids);
 
-        $dql = "SELECT a FROM App\Entity\CryptocurrencyData a WHERE a.id IN (SELECT wl.cryptocurrencies FROM App\Entity\Watchlists wl WHERE wl.users = 1) ";
-        $query = $em->createQuery($dql);
+        $query = $cryptocurrencyDataRepository->fetchDataByIds($arrayToString);
 
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
@@ -72,8 +59,7 @@ class CryptocurrencyController extends AbstractController
             3 /*limit per page*/
         );
 
-        //afficher les cryptomonnaies.
-        $contents = $this->render('components/table_rank.html.twig', ['cryptocurrencies' => $pagination,])->getContent();
+        $contents = $this->render('components/table_rank.html.twig', ['cryptocurrencies' => $pagination])->getContent();
 
         return new JsonResponse($contents);
 
@@ -97,7 +83,7 @@ class CryptocurrencyController extends AbstractController
      * Permet d'ajouter ou de supprimer une cryptomonnaie dans la liste des favoris de l'utilisateur.
      * @Route("/addWatchlist/{id}", name="app_watchlist", methods={"POST"})
      */
-    public function watchlistManager(int $id, WatchlistsRepository $watchlistRepo, EntityManagerInterface $entityManager): Response
+    public function watchlistManager(int $id, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
 
@@ -110,32 +96,24 @@ class CryptocurrencyController extends AbstractController
         
         } elseif ($user) {
 
-            $watchlist = $watchlistRepo->findOneBy(['users' => $user]);
+            if ($user->getWatchlist()->getValues() == null) {
 
-            if ($watchlist == null) {
-
-                $createWatchlist = new Watchlists();
-                $createWatchlist->setUsers($user);
-                $createWatchlist->addCryptocurrency($cryptocurrency);
-                $entityManager->persist($createWatchlist);
+                $user->addWatchlist($cryptocurrency);
                 $entityManager->flush();
 
-                return $this->json(['message' => 'create and add'], 200);
+                return $this->json(['message' => 'add'], 200);
 
             } else {
 
                 if ($cryptocurrency->likedByUser($user)) {  //si l'utilisateur a déjà ajouté cette cryptomonnaie à sa watchtlist on la supprime.
-            
-                    $watchlist = $watchlistRepo->findOneBy(['users' => $user]);
-                    $watchlist->removeCryptocurrency($cryptocurrency);
+                    $user->removeWatchlist($cryptocurrency);
                     $entityManager->flush();
         
                     return $this->json(['message' => 'remove'], 200);
                     
                 } else {
-        
-                    $watchlist = $watchlistRepo->findOneBy(['users' => $user]);
-                    $watchlist->addCryptocurrency($cryptocurrency);
+                    
+                    $user->addWatchlist($cryptocurrency);
                     $entityManager->flush();
                     
                     return $this->json(['message' => 'add'], 200);
