@@ -87,9 +87,15 @@ class Cryptocurrencies
      */
     private $currency_data;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Users::class, mappedBy="watchlist")
+     */
+    private $users;
+
     public function __construct()
     {
         $this->currency_data = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -270,22 +276,48 @@ class Cryptocurrencies
 
         return $this;
     }
-
-   
-    // public function likedByUser(Users $user)
-    // {
-    //     foreach ($this->watchlists as $watchlist) {
-
-    //         //Si une watchlist correspond à la watchlist de l'utilisateur.
-    //         if ($watchlist === $user->getWatchlists()) {
-                
-    //             return true;
-    //         } else {
-                
-    //             return false;
-                
-    //         }   
-    //     }
-    // }
     
+    /**
+     * @return Collection|Users[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(Users $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addWatchlist($this);
+        }
+        
+        return $this;
+    }
+    
+    public function removeUser(Users $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeWatchlist($this);
+        }
+        
+        return $this;
+    }
+    
+    public function likedByUser(Users $user)
+    {
+        foreach ($this->users as $u) {
+            // dd($u);
+            //Si une watchlist correspond à la watchlist de l'utilisateur.
+            if ($u->getWatchlist() === $user->getWatchlist()) {
+                
+                return true;
+            
+            } else {
+                
+                return false;
+                
+            }   
+        }
+    }
 }
