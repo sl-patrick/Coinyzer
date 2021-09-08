@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20210903130030 extends AbstractMigration
+final class Version20210908134004 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -30,6 +30,7 @@ final class Version20210903130030 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE SCHEMA public');
         $this->addSql('DROP TABLE users_cryptocurrencies');
     }
 }

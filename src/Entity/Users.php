@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UsersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -47,15 +49,19 @@ class Users implements UserInterface
     private $isVerified = false;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Cryptocurrencies::class)
-     *
-     */
-    private $favorites;
-
-    /**
      * @var string
      */
     private $plainPassword;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Cryptocurrencies::class, inversedBy="users")
+     */
+    private $watchlist;
+
+    public function __construct()
+    {
+        $this->watchlist = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -162,17 +168,6 @@ class Users implements UserInterface
         return $this;
     }
 
-    public function getFavorite()
-    {
-        return $this->favorites;
-    }
-
-    public function setFavorite(Cryptocurrencies $cryptocurrencies)
-    {
-        $this->favorites = $cryptocurrencies;
-        return $this;
-    }
-
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
@@ -181,6 +176,30 @@ class Users implements UserInterface
     public function setPlainPassword(string $plainPassword): Users
     {
         $this->plainPassword = $plainPassword;
+        return $this;
+    }
+
+    /**
+     * @return Collection|Cryptocurrencies[]
+     */
+    public function getWatchlist(): Collection
+    {
+        return $this->watchlist;
+    }
+
+    public function addWatchlist(Cryptocurrencies $watchlist): self
+    {
+        if (!$this->watchlist->contains($watchlist)) {
+            $this->watchlist[] = $watchlist;
+        }
+
+        return $this;
+    }
+
+    public function removeWatchlist(Cryptocurrencies $watchlist): self
+    {
+        $this->watchlist->removeElement($watchlist);
+
         return $this;
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\CryptocurrencyData;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Users;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method CryptocurrencyData|null find($id, $lockMode = null, $lockVersion = null)
@@ -54,5 +56,30 @@ class CryptocurrencyDataRepository extends ServiceEntityRepository
             ->orderBy('c.market_cap', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function fetchData()
+    {
+        $qb = $this->createQueryBuilder('d')
+            ->join('d.cryptocurrencies', 'c')
+            ->where('d.cryptocurrencies = c.id')
+            ->orderBy('d.market_cap', 'DESC');
+        
+        $query = $qb->getQuery();
+
+        return $query;
+
+    }
+
+    public function fetchDataByIds(string $ids)
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->join('a.cryptocurrencies', 'b')
+            ->add('where', "a.cryptocurrencies IN ($ids)")
+            ->orderBy('a.market_cap', 'DESC');
+
+        $query = $qb->getQuery();
+
+        return $query;
     }
 }
