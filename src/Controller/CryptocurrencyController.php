@@ -27,9 +27,8 @@ class CryptocurrencyController extends AbstractController
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
-            3 /*limit per page*/
+            5 /*limit per page*/
         );
-
         
         return $this->render('cryptocurrency/index.html.twig', [
             'cryptocurrencies' => $pagination,
@@ -37,7 +36,7 @@ class CryptocurrencyController extends AbstractController
     }
 
     /**
-     * @Route("/watchlist", name="app_cryptocurrenciesWatchlist")
+     * @Route("/cryptocurrencies/watchlist", name="app_cryptocurrenciesWatchlist")
      */
     public function showWatchlist(PaginatorInterface $paginator, Request $request, CryptocurrencyDataRepository $cryptocurrencyDataRepository)
     {
@@ -56,13 +55,12 @@ class CryptocurrencyController extends AbstractController
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
-            3 /*limit per page*/
+            5 /*limit per page*/
         );
 
-        $contents = $this->render('components/table_rank.html.twig', ['cryptocurrencies' => $pagination])->getContent();
-
-        return new JsonResponse($contents);
-
+        return $this->render('components/table_watchlist.html.twig', [
+            'cryptocurrencies' => $pagination,
+        ]);
     }
 
     /**
@@ -123,10 +121,9 @@ class CryptocurrencyController extends AbstractController
     }
 
     /**
-     * Undocumented function
-     *@Route("/cryptocurrencies/refresh", name="app_cryptocurrenciesRefresh", methods={"POST"})
+     *@Route("/cryptocurrencies/refresh", name="app_cryptocurrenciesRefresh", methods={"GET"})
      */
-    public function updateByUser(Request $request, CallApi $callApi, PaginatorInterface $paginator, EntityManagerInterface $em)
+    public function updateByUser(CryptocurrencyDataRepository $cryptocurrencyDataRepository, Request $request, CallApi $callApi, PaginatorInterface $paginator, EntityManagerInterface $em)
     {
         //recupere le temps actuel
         $currentTime = time();
@@ -148,27 +145,19 @@ class CryptocurrencyController extends AbstractController
             
             $callApi->updateCryptocurrencyData();
     
-            $dql = "SELECT a, b FROM App\Entity\CryptocurrencyData a JOIN a.cryptocurrencies b WHERE a.cryptocurrencies = b.id ORDER BY a.market_cap DESC";
-            $query = $em->createQuery($dql);
-        
-            $cryptocurrencies = $paginator->paginate(
-                $query, /* query NOT result */
-                $request->query->getInt('page', 1), /*page number*/
-                3 /*limit per page*/
-            );
+            $query = $cryptocurrencyDataRepository->fetchData();
 
         } else {
 
-            $dql = "SELECT a, b FROM App\Entity\CryptocurrencyData a JOIN a.cryptocurrencies b WHERE a.cryptocurrencies = b.id ORDER BY a.market_cap DESC";
-            $query = $em->createQuery($dql);
-        
-            $cryptocurrencies = $paginator->paginate(
-                $query, /* query NOT result */
-                $request->query->getInt('page', 1), /*page number*/
-                3 /*limit per page*/
-            );
+            $query = $cryptocurrencyDataRepository->fetchData();
         }
         
+        $cryptocurrencies = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            5 /*limit per page*/
+        );
+
         $contents = $this->render('components/table_rank.html.twig', ['cryptocurrencies' => $cryptocurrencies,])->getContent();
         
         return new JsonResponse($contents);
