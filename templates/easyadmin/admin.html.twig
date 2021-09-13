@@ -1,0 +1,32 @@
+{% extends "@EasyAdmin/page/content.html.twig" %}
+
+{% block page_title 'Settings' %}
+
+{% block page_content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Modifier le mot de passe</h1>
+                
+                {{ form_start(modifyForm) }}
+                    <div class="form-floating mb-3">
+                        <label for="change_password_form_plainPassword_first" class="form-label required">Nouveau mot de passe</label>
+                        <input type="password" class="form-control required" id="change_password_form_plainPassword_first" name="change_password_form[plainPassword][first]">
+                        {{ form_errors(modifyForm.plainPassword.first) }}
+                        {% do modifyForm.plainPassword.first.setRendered %}
+                    </div>
+                    <div class="form-floating mb-3">
+                        <label for="change_password_form_plainPassword_second" class="form-label required">Confimer le mot de passe</label>
+                        <input type="password" class="form-control required" id="change_password_form_plainPassword_second" name="change_password_form[plainPassword][second]">
+                        {{ form_errors(modifyForm.plainPassword.second) }}
+                        {% do modifyForm.plainPassword.second.setRendered %}
+                    </div>
+                    {# {{ form_row(modifyForm.plainPassword) }} #}
+                    <button class="btn btn-primary">Modifier le mot de passe</button>
+                    {{ form_widget(modifyForm._token) }} 
+                {{ form_end(modifyForm) }}
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
