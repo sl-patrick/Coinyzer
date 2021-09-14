@@ -5,15 +5,10 @@ namespace App\Entity;
 use App\Entity\Users;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
-use App\Repository\CryptocurrenciesRepository;
-use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
-use phpDocumentor\Reflection\Types\Boolean;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=CryptocurrenciesRepository::class)
- * @Vich\Uploadable
  */
 class Cryptocurrencies
 {
@@ -39,13 +34,6 @@ class Cryptocurrencies
      * @var string
      */
     private $logo;
-
-    /**
-     * NOTE: This is not a mapped field of entity metadata, just a simple property.
-     * @Vich\UploadableField(mapping="cryptocurrencies_logo", fileNameProperty="logo")
-     * @var File
-     */
-    private $logoFile;
     
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -137,25 +125,6 @@ class Cryptocurrencies
         $this->logo = $logo;
 
         return $this;
-    }
-
-    public function getLogoFile(): ?File
-    {
-        return $this->logoFile;
-    }
-
-    /**
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $logoFile
-     */
-    public function setLogoFile(?File $logo = null): void
-    {
-        $this->logoFile = $logo;
-
-        if ($logo) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->created_at = new \DateTimeImmutable('now');
-        }
     }
 
     public function getDescription(): ?string
