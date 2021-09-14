@@ -3,11 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Cryptocurrencies;
-use Vich\UploaderBundle\Form\Type\VichImageType;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -26,8 +23,6 @@ class CryptocurrenciesCrudController extends AbstractCrudController
             // IdField::new('id'),
             TextField::new('name'),
             TextField::new('fullname'),
-            TextField::new('logoFile')->setFormType(VichImageType::class)->onlyWhenCreating(),
-            ImageField::new('logo')->setBasePath('/images/logo')->onlyOnIndex(),
             TextEditorField::new('description'),
             UrlField::new('website'),
             UrlField::new('source_code'),
