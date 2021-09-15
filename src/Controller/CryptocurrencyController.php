@@ -79,7 +79,7 @@ class CryptocurrencyController extends AbstractController
 
     /**
      * Permet d'ajouter ou de supprimer une cryptomonnaie dans la liste des favoris de l'utilisateur.
-     * @Route("/addWatchlist/{id}", name="app_watchlist", methods={"POST"})
+     * @Route("/addWatchlist/{id}", name="app_watchlist", methods={"GET"})
      */
     public function watchlistManager(int $id, EntityManagerInterface $entityManager): Response
     {
