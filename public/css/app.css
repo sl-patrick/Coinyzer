@@ -22,3 +22,7 @@ html, body{
     resize: none;
     overflow: hidden;
 }
+
+.table-thumb{
+    height: 32px;
+}
