@@ -34,6 +34,15 @@ class CallApi extends AbstractController {
         return $data['RAW'];
     }
 
+    public function fetchLogo(string $name, string $currency = 'EUR')
+    {
+        $data = $this->requestApi($name, $currency);
+        
+        $logo = 'https://www.cryptocompare.com'. $data[$name][$currency]['IMAGEURL'];
+
+        return $logo;
+    }
+
     public function fetchCryptocurrencyData(string $name, string $currency = 'EUR')
     {        
         $data = $this->requestApi($name, $currency);
