@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
+
 /**
  * @method CryptocurrencyData|null find($id, $lockMode = null, $lockVersion = null)
  * @method CryptocurrencyData|null findOneBy(array $criteria, array $orderBy = null)
@@ -73,10 +74,10 @@ class CryptocurrencyDataRepository extends ServiceEntityRepository
 
     public function fetchDataByIds(string $ids)
     {
-        $qb = $this->createQueryBuilder('a')
-            ->join('a.cryptocurrencies', 'b')
-            ->add('where', "a.cryptocurrencies IN ($ids)")
-            ->orderBy('a.market_cap', 'DESC');
+        $qb = $this->createQueryBuilder('d')
+            ->join('d.cryptocurrencies', 'c')
+            ->add('where', "d.cryptocurrencies IN ($ids)")
+            ->orderBy('d.market_cap', 'DESC');
 
         $query = $qb->getQuery();
 
