@@ -8,11 +8,11 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 Class CryptocurrencyListener
 {
-    private $_api;
+    private $api;
 
     public function __construct(CallApi $callApi)
     {
-        $this->_api = $callApi; 
+        $this->api = $callApi; 
     }
 
     /**
@@ -33,8 +33,11 @@ Class CryptocurrencyListener
 
             $name = $entity->getName();
 
+            $logo = $this->api->fetchLogo(strtoupper($name));
             $data = $this->api->fetchCryptocurrencyData(strtoupper($name));
 
+            $entity->setLogo($logo);
+            $entity->setCreatedAt(new \DateTime());
             $entity->addCurrencyData($data);
             
         }
