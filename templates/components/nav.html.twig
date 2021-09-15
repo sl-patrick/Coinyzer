@@ -13,9 +13,16 @@
 					<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_cryptocurrenciesRank') }}">CLASSEMENTS</a>
 					</li>
+						{% if is_granted('ROLE_USER') %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_cryptocurrenciesWatchlist') }}">FAVORIS</a>
+						</li>	
+					{% endif %}
+					
 					<li class="nav-item">
 						<a class="nav-link" href=" {{ path('app_contact')}} ">CONTACT</a>
 					</li>
+					
 					{% if is_granted('ROLE_USER') %}
 						<li class="nav-item">
 							<a href="{{path('app_admin')}}" class="nav-link"><i class="fas fa-user"></i></a>

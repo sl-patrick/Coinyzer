@@ -1,18 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CryptocurrencyController!{% endblock %}
+{% block title %} {{cryptocurrency.fullname}} | Overview {% endblock %}
 
 {% block body %}
-    {% include "./components/nav.html.twig" %}
 
     <section class="h-100 d-flex flex-column justify-content-center text-center">
         <div class="container">
-            {# <pre>
-                {{ dump(cryptocurrency) }}
-            </pre> #}
             <div class="header">
                 <div class="logo mb-3">
-                    <img src="..." alt="logo"> 
+                    <img class="" src="{{cryptocurrency.logo}}" alt="logo">
                 </div>
                 <h2>{{ cryptocurrency.fullname | upper }}</h2>
                 <p class="text-muted">{{ cryptocurrency.name | upper }}</p>
