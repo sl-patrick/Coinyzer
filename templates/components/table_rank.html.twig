@@ -3,6 +3,7 @@
 		<tr>
 			<th scope="col"></th>
 			<th scope="col">#</th>
+			<th scope="col"></th>
 			<th scope="col">{{ knp_pagination_sortable(cryptocurrencies, 'Name', 'c.fullname')}}</th>
 			<th scope="col">{{ knp_pagination_sortable(cryptocurrencies, 'Price', 'd.price')}}</th>
 			<th scope="col">{{ knp_pagination_sortable(cryptocurrencies, 'Market Cap', 'd.market_cap')}}</th>
@@ -26,13 +27,16 @@
 				<td class="rank">
 					{{rank}}
 				</td>
-				<td class="fullname text-left">
+				<td class="thumb">
 					<a href=" {{ path('app_CryptocurrencyOverview', {slug: item.cryptocurrencies.fullName }) }} " class="text-decoration-none link-dark">
-						<p>
-							<img src="..." alt="">
-							{{item.cryptocurrencies.fullname|capitalize}}
-							<span class="name text-muted">{{item.cryptocurrencies.name|upper}}</span>
-						</p>
+						<img class="table-thumb" src="{{item.cryptocurrencies.logo}} " alt="logo">
+					</a>
+
+				</td>
+				<td class="fullname text-start">
+					<a href=" {{ path('app_CryptocurrencyOverview', {slug: item.cryptocurrencies.fullName }) }} " class="text-decoration-none link-dark">
+						{{item.cryptocurrencies.fullname|capitalize}}
+						<span class="name text-muted">{{item.cryptocurrencies.name|upper}}</span>
 					</a>
 				</td>
 				<td class="price text-nowrap">
