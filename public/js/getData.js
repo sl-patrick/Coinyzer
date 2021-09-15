@@ -10,7 +10,7 @@ refreshButton.addEventListener('click', function(e) {
 			placement.innerHTML = array;
 		}
 	};
-	xhr.open("POST", '/cryptocurrencies/refresh', true);
+	xhr.open("GET", '/cryptocurrencies/refresh', true);
 	xhr.responseType = "json";
 	xhr.send();
 });
