@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Users;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use App\Repository\CryptocurrenciesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
