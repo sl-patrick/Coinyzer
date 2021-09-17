@@ -50,7 +50,7 @@ class CryptocurrencyDataRepository extends ServiceEntityRepository
         ;
     }
     */
-
+    
     public function findByMarketCapGreater()
     {
         return $this->createQueryBuilder('c')

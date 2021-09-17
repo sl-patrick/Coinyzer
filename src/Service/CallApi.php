@@ -93,10 +93,10 @@ class CallApi extends AbstractController {
             $cryptocurrency[0]->setVolume24h($value[$currency]['VOLUME24HOURTO']);
             $cryptocurrency[0]->setCirculatingSupply($value[$currency]['SUPPLY']);
             $cryptocurrency[0]->setUpdateAt(new \DateTimeImmutable("now"));
-    
+            
             $entityManager->flush();
+
         }
-        
         
     }
 
