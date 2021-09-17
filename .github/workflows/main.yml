@@ -36,5 +36,5 @@ jobs:
           # The remote user
           remote_user: ${{ secrets.DEPLOY_USER }}
           # The remote key
-          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          remote_key: ${{ secrets.DEPLOY_KEY }}
 
