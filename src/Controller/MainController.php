@@ -61,9 +61,9 @@ class MainController extends AbstractController
             // envoie du mail 
             $email = (new Email())
                 ->from($contact['email'])
-                ->to(new Address('contact@coinyzer.com', 'Coinyzer'))
-                ->subject('support')
-                ->text('Lorem ipsum...');
+                ->to('coinyzer@psamelhori.fr')
+                ->subject('Support')
+                ->text($contact['message']);
             
             $mailer->send($email);
 
