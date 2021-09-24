@@ -15,7 +15,7 @@ class SearchCryptocurrencyType extends AbstractType
         $builder
             ->add('find', SearchType::class, [
                 'attr' => [
-                    'placeholder' => 'Cherchez une cryptomonnaie'
+                    'placeholder' => 'btc, ethereum, ...'
                 ],
             ])
             ->add('search', SubmitType::class)
