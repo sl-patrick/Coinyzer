@@ -1,22 +1,23 @@
 {% extends 'base.html.twig' %}
 
 
-{% block body %}
-    {% include "./components/nav.html.twig" %}
-    <section class="hero d-flex flex-column justify-content-center text-center">
+{% block content %}
+    <section class="hero wrapper">
         <div class="container">
-            <div class="hero-text text-white">
-                <h1>Coinyzer</h1>
-                <p class="lead mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat ab perspiciatis non. Consequuntur commodi dignissimos iste incidunt. Voluptates tenetur vero aut earum sit, voluptatem omnis ut soluta eaque. Fugiat, quisquam.</p>
-                <div class="container">
-                    {{ form_start(searchForm) }}
-                        <div class="input-group mb-3">
-                            <input type="search" class="form-control" name="{{searchForm.find.vars.full_name}}" id="{{searchForm.find.vars.id}}" placeholder="{{searchForm.find.vars.attr.placeholder}}" aria-describedby="button-addon">
-                            {% do searchForm.find.setRendered %}
-                            {{ form_widget(searchForm.search) }}
-                            {% do searchForm.search.setRendered %}
-                        </div>
-                    {{ form_end(searchForm) }}
+            <div class="row justify-content-center">
+                <div class="hero-text text-white col-lg-8">
+                    <h1>COINYZER</h1>
+                    <p class="lead mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat ab perspiciatis non. Consequuntur commodi dignissimos iste incidunt. Voluptates tenetur vero aut earum sit, voluptatem omnis ut soluta eaque. Fugiat, quisquam.</p>
+                    <div>
+                        {{ form_start(searchForm) }}
+                            <div class="input-group mb-3">
+                                <input type="search" class="form-control" name="{{searchForm.find.vars.full_name}}" id="{{searchForm.find.vars.id}}" placeholder="{{searchForm.find.vars.attr.placeholder}}" aria-describedby="button-addon">
+                                {% do searchForm.find.setRendered %}
+                                {{ form_widget(searchForm.search) }}
+                                {% do searchForm.search.setRendered %}
+                            </div>
+                        {{ form_end(searchForm) }}
+                    </div>
                 </div>
             </div>
         </div>

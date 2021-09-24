@@ -1,4 +1,10 @@
+let errorMessage = document.querySelector('.error-favorite');
+let closeErrorMessage = document.querySelector('.error-close');
 let btn = document.querySelectorAll('.add-watchlist');
+
+closeErrorMessage.addEventListener('click', function() {
+    errorMessage.classList.add("hidden");   
+});
 
 btn.forEach(element => {
     element.addEventListener('click', function(e) {
@@ -10,18 +16,13 @@ btn.forEach(element => {
         })
         .then(function(response) {
             if (response.status !== 200) {
-                return response.text().then(function(text) {
-
-                    let value = JSON.parse(text);
-                    console.log(value.message);
-                });
-                // alert('Connectez-vous');
-
+    
+                errorMessage.classList.remove("hidden");
+            
             } else if (response.status === 200) {
                 return response.text().then(function(text) {
 
                     let value = JSON.parse(text);
-                    console.log(value.message);
                     let state = element.children[0].classList;
 
                     if (value.message === 'add' || value.message === 'create and add' ) {
