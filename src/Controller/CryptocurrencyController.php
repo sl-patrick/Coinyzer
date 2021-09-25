@@ -47,20 +47,27 @@ class CryptocurrencyController extends AbstractController
         foreach ($watchlist as $value) {
             $ids[] = $value->getId();
         }
+
+        if (empty($ids)) {
+            
+            return $this->redirectToRoute('app_cryptocurrenciesRank');
+            
+        } else {
+            $arrayToString = implode(",", $ids);
+    
+            $query = $cryptocurrencyDataRepository->fetchDataByIds($arrayToString);
+    
+            $pagination = $paginator->paginate(
+                $query, /* query NOT result */
+                $request->query->getInt('page', 1), /*page number*/
+                5 /*limit per page*/
+            );
+    
+            return $this->render('components/table_watchlist.html.twig', [
+                'cryptocurrencies' => $pagination,
+            ]);
+        }
         
-        $arrayToString = implode(",", $ids);
-
-        $query = $cryptocurrencyDataRepository->fetchDataByIds($arrayToString);
-
-        $pagination = $paginator->paginate(
-            $query, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            5 /*limit per page*/
-        );
-
-        return $this->render('components/table_watchlist.html.twig', [
-            'cryptocurrencies' => $pagination,
-        ]);
     }
 
     /**
@@ -68,8 +75,7 @@ class CryptocurrencyController extends AbstractController
      */
     public function details(string $slug, CryptocurrenciesRepository $cryptocurrenciesRepository) :Response
     {
-        $cryptocurrency = $cryptocurrenciesRepository
-                ->findByNameOrFullname($slug);
+        $cryptocurrency = $cryptocurrenciesRepository->findByNameOrFullname($slug);
         
            
         return $this->render('cryptocurrency/details.html.twig', [

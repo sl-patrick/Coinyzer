@@ -130,12 +130,12 @@ class Cryptocurrencies
 
     public function getDescription(): ?string
     {
-        return $this->description;
+        return strip_tags($this->description);
     }
 
     public function setDescription(?string $description): self
     {
-        $this->description = $description;
+        $this->description = htmlspecialchars(strip_tags($description));
 
         return $this;
     }
