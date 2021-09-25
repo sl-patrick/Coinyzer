@@ -64,25 +64,19 @@ class CallApi extends AbstractController {
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        //récupère toutes les cryptomonnaies en base de données.
         $allData = $entityManager->getRepository(CryptocurrencyData::class)->findAll();
         
-        //pour chaque cryptomonnaies je garde le nom que j'insère dans un tableau.
         foreach ($allData as $value) {
             $name[] = $value->getCryptocurrencies()->getName();
             $currency = $value->getCurrency();
         }
 
-        //transforme le tableau en chaîne de caractères.
         $arrayToString = implode(",", $name);
 
-        //recupère les données 
         $getData = $this->requestApi($arrayToString, $currency);
 
-        //Pour chaque entrée du tableau mettre à jour les valeurs.
         foreach ($getData as $key => $value) {
 
-            //Gérer la casse chaîne de caractères
             $cryptocurrencyByName = $entityManager->getRepository(Cryptocurrencies::class)->findOneBy(['name' => strtolower($key)]);
 
             $cryptocurrency = $entityManager->getRepository(CryptocurrencyData::class)->findBy(['cryptocurrencies' => $cryptocurrencyByName->getId()]);
@@ -96,8 +90,5 @@ class CallApi extends AbstractController {
     
             $entityManager->flush();
         }
-        
-        
     }
-
 }

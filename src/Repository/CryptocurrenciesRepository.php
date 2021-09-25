@@ -63,6 +63,7 @@ class CryptocurrenciesRepository extends ServiceEntityRepository
             $this->query = $query->getOneOrNullResult();
 
         } elseif (strlen($value) > 3) {
+            
             $qb = $this->createQueryBuilder('c')
                 ->where('c.fullname = :fullname')
                 ->setParameter('fullname', $value)
@@ -71,13 +72,14 @@ class CryptocurrenciesRepository extends ServiceEntityRepository
             $query = $qb->getQuery();
 
             $this->query = $query->getOneOrNullResult();
-
         }
 
         if (isset($this->query)) {
+            
             return $this->query;
-        } elseif (!isset($this->query)) {
 
+        } elseif (!isset($this->query)) {
+            
             return false; 
         }
 

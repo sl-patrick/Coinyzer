@@ -16,7 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CryptocurrencyController extends AbstractController
-{
+{   
+    private $limitPerPage = 5;
+
     /**
      * @Route("/cryptocurrencies", name="app_cryptocurrenciesRank")
      */
@@ -27,7 +29,7 @@ class CryptocurrencyController extends AbstractController
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
-            5 /*limit per page*/
+            $this->limitPerPage /*limit per page*/
         );
         
         return $this->render('cryptocurrency/index.html.twig', [
@@ -53,6 +55,7 @@ class CryptocurrencyController extends AbstractController
             return $this->redirectToRoute('app_cryptocurrenciesRank');
             
         } else {
+
             $arrayToString = implode(",", $ids);
     
             $query = $cryptocurrencyDataRepository->fetchDataByIds($arrayToString);
@@ -60,7 +63,7 @@ class CryptocurrencyController extends AbstractController
             $pagination = $paginator->paginate(
                 $query, /* query NOT result */
                 $request->query->getInt('page', 1), /*page number*/
-                5 /*limit per page*/
+                $this->limitPerPage /*limit per page*/
             );
     
             return $this->render('components/table_watchlist.html.twig', [
@@ -77,14 +80,17 @@ class CryptocurrencyController extends AbstractController
     {
         $cryptocurrency = $cryptocurrenciesRepository->findByNameOrFullname($slug);
         
-           
+        if ($cryptocurrency === false) {
+        
+            return $this->redirectToRoute('app_cryptocurrenciesRank');    
+        }
+
         return $this->render('cryptocurrency/details.html.twig', [
             'cryptocurrency' => $cryptocurrency,
         ]);
     }
 
     /**
-     * Permet d'ajouter ou de supprimer une cryptomonnaie dans la liste des favoris de l'utilisateur.
      * @Route("/addWatchlist/{id}", name="app_watchlist", methods={"GET"})
      */
     public function watchlistManager(int $id, EntityManagerInterface $entityManager): Response
@@ -109,7 +115,7 @@ class CryptocurrencyController extends AbstractController
 
             } else {
 
-                if ($cryptocurrency->likedByUser($user)) {  //si l'utilisateur a déjà ajouté cette cryptomonnaie à sa watchtlist on la supprime.
+                if ($cryptocurrency->likedByUser($user)) { 
                     $user->removeWatchlist($cryptocurrency);
                     $entityManager->flush();
         
@@ -131,23 +137,19 @@ class CryptocurrencyController extends AbstractController
      */
     public function updateByUser(CryptocurrencyDataRepository $cryptocurrencyDataRepository, Request $request, CallApi $callApi, PaginatorInterface $paginator, EntityManagerInterface $em)
     {
-        //recupere le temps actuel
         $currentTime = time();
         
-        //recupere la date de la derniere mise a jour
-        $lastUpdateData = $em->getRepository(CryptocurrencyData::class)->findAll();
+        $cryptocurrencies = $em->getRepository(CryptocurrencyData::class)->findAll();
         
-        foreach ($lastUpdateData as $value) {
+        foreach ($cryptocurrencies as $value) {
             $time = $value->getUpdateAt();
         }
 
-        //transformer la date de la derniere mise a jour en timestamp
         $timeToString = date_format($time, 'Y-m-d H:i:s');
 
         $timeToTimestamp = strtotime($timeToString);
 
-        //si la derniere mise a jour + 30 secondes est egal au temps actuel ou est inferieur -> autoriser la mise a jour
-        if ($timeToTimestamp + 30 === $currentTime OR $timeToTimestamp + 30 < $currentTime) {
+        if ($timeToTimestamp + 30 <= $currentTime) {
             
             $callApi->updateCryptocurrencyData();
     
@@ -161,7 +163,7 @@ class CryptocurrencyController extends AbstractController
         $cryptocurrencies = $paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
-            5 /*limit per page*/
+            $this->limitPerPage /*limit per page*/
         );
 
         $contents = $this->render('components/table_rank.html.twig', ['cryptocurrencies' => $cryptocurrencies,])->getContent();

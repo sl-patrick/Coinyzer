@@ -67,11 +67,6 @@ class Cryptocurrencies
     private $updated_at;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $published;
-
-    /**
      * @ORM\OneToMany(targetEntity=CryptocurrencyData::class, mappedBy="cryptocurrencies", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $currency_data;
@@ -196,18 +191,6 @@ class Cryptocurrencies
     public function setUpdatedAt(?\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function getPublished(): ?bool
-    {
-        return $this->published;
-    }
-
-    public function setPublished(bool $published): self
-    {
-        $this->published = $published;
 
         return $this;
     }

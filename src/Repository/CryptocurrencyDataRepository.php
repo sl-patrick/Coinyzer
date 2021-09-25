@@ -61,7 +61,6 @@ class CryptocurrencyDataRepository extends ServiceEntityRepository
         $query = $qb->getQuery();
 
         return $query;
-
     }
 
     public function fetchDataByIds(string $ids)

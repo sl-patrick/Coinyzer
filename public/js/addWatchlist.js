@@ -1,12 +1,12 @@
+let buttonWatchlist = document.querySelectorAll('.add-watchlist');
 let errorMessage = document.querySelector('.error-favorite');
 let closeErrorMessage = document.querySelector('.error-close');
-let btn = document.querySelectorAll('.add-watchlist');
 
 closeErrorMessage.addEventListener('click', function() {
     errorMessage.classList.add("hidden");   
 });
 
-btn.forEach(element => {
+buttonWatchlist.forEach(element => {
     element.addEventListener('click', function(e) {
         e.preventDefault();
         let url = this.href;

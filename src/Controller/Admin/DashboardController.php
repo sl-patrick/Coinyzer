@@ -44,7 +44,6 @@ class DashboardController extends AbstractDashboardController
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('app_home');
-
         }
 
         return $this->render('easyadmin/admin.html.twig', [
@@ -63,8 +62,7 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {        
         yield MenuItem::linkToCrud('Cryptomonnaies', 'fab fa-bitcoin fa-3x', Cryptocurrencies::class)->setPermission('ROLE_ADMIN');
-        yield MenuItem::linkToRoute('Retourner sur le site', 'fas fa-reply', 'app_home');
-        
+        yield MenuItem::linkToRoute('Retourner sur le site', 'fas fa-reply', 'app_home');    
     }
     
 }
