@@ -63,7 +63,7 @@ class MainController extends AbstractController
                 ->from($contact['email'])
                 ->to('coinyzer@psamelhori.fr')
                 ->subject('Support')
-                ->text($contact['message']);
+                ->text(htmlspecialchars(strip_tags($contact['message'])));
             
             $mailer->send($email);
 
