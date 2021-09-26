@@ -6,7 +6,7 @@
 			<th scope="col"></th>
 			<th scope="col" class="text-start">{{ knp_pagination_sortable(cryptocurrencies, 'Name', 'c.fullname')}}</th>
 			<th scope="col">{{ knp_pagination_sortable(cryptocurrencies, 'Price', 'd.price')}}</th>
-			<th scope="col">{{ knp_pagination_sortable(cryptocurrencies, 'Market Cap', 'd.market_cap')}}</th>
+			<th scope="col"  class="text-nowrap">{{ knp_pagination_sortable(cryptocurrencies, 'Market Cap', 'd.market_cap')}}</th>
 			<th scope="col">{{ knp_pagination_sortable(cryptocurrencies, 'Volume', 'd.volume_24h')}}</th>
 			<th scope="col" class="text-nowrap">{{ knp_pagination_sortable(cryptocurrencies, 'Circulating Supply', 'd.circulating_supply')}}</th>
 		</tr>
