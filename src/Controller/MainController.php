@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
 class MainController extends AbstractController
@@ -21,19 +20,15 @@ class MainController extends AbstractController
      */
     public function index(Request $request, CryptocurrenciesRepository $cryptocurrenciesRepository): Response
     {    
-        //Création du formulaire
-        $searchForm = $this->get('form.factory')->createNamed('search-form', SearchCryptocurrencyType::class);
-
+        $searchForm = $this->createForm(SearchCryptocurrencyType::class);
         $searchForm->handleRequest($request);
         
-        //Vérification si le formulaire est envoyé et valide
         if ($searchForm->isSubmitted() AND $searchForm->isValid()) {
            
-            $value = $searchForm->getData(); //stock la valeur du formulaire
+            $value = $searchForm->getData();
 
             $valueToLower = strtolower($value['find']);
             
-            //on vérifie si la valeur du formulaire correspond a une valeur en base de données
             $cryptocurrency = $cryptocurrenciesRepository->findByNameOrFullname($valueToLower);
 
             if ($cryptocurrency instanceof Cryptocurrencies) {
@@ -58,20 +53,16 @@ class MainController extends AbstractController
         if ($form->isSubmitted() AND $form->isValid()) {
             $contact = $form->getData();
 
-            // envoie du mail 
             $email = (new Email())
                 ->from($contact['email'])
-                ->to(new Address('contact@coinyzer.com', 'Coinyzer'))
-                ->subject('support')
-                ->text('Lorem ipsum...');
+                ->to('coinyzer@psamelhori.fr')
+                ->subject('Support')
+                ->text(htmlspecialchars(strip_tags($contact['message'])));
             
             $mailer->send($email);
 
-            //message pour l'utilisateur.
-            $this->addFlash('success', 'Merci de votre message ! Notre équipe vous répondra dans les meilleurs délais.');
-            
+            $this->addFlash('success', 'Merci de votre message ! Notre équipe vous répondra dans les meilleurs délais.');     
         }
-
 
         return $this->render('main/contact.html.twig', [
             'contactForm' => $form->createView(),

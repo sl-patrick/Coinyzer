@@ -1,47 +1,48 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    {% include "./components/nav.html.twig" %}
+{% block title %}Coinyzer | Contact{% endblock %}
 
-    <section class="h-100 d-flex flex-column justify-content-center text-center">
 
-    
-    <div class="container">
-        {{ form_start(contactForm, {'attr':{'id': 'contact-form'}}) }}
-        
-            <h2 class="mb-3">Contact</h2>
+{% block content %}
 
-            {# {{form_row(contactForm.email)}} #}
-            {% for message in app.flashes('success') %}
-                <div class="flash-message alert alert-success" role="alert">
-                    {{ message }}
+    <section class="h-100 wrapper">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="mb-3">Contactez-nous</h2>
+                    {{ form_start(contactForm, {'attr':{'id': 'contact-form'}}) }}
+                    
+                        {% for message in app.flashes('success') %}
+                            <div class="flash-message alert alert-success" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        
+                        <div class="form-floating mb-3">
+                        {% if app.user %}
+                            <input type="email" value="{{ app.user.email}} " name="{{contactForm.email.vars.full_name}}" class="form-control" id="{{contactForm.email.vars.id}}">
+                        {% else %}
+                            <input type="email" name="{{contactForm.email.vars.full_name}}" class="form-control" id="{{contactForm.email.vars.id}}">
+                            
+                        {% endif %}
+                            <label for="{{contactForm.email.vars.id}}">Email</label>
+                            {{ form_errors(contactForm.email)}} 
+                            {% do contactForm.email.setRendered %}
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <textarea name="{{contactForm.message.vars.full_name}}" class="form-control" id="{{contactForm.message.vars.id}}"></textarea>
+                            <label for="{{contactForm.message.vars.id}}">Message</label>
+                            {{ form_errors(contactForm.message)}} 
+                            {% do contactForm.message.setRendered %}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary submit-contact">Envoyer</button>
+
+                    {{ form_end(contactForm) }}
                 </div>
-            {% endfor %}
-            
-            <div class="form-floating mb-3">
-            {% if app.user %}
-                <input type="email" value="{{ app.user.email}} " name="{{contactForm.email.vars.full_name}}" class="form-control" id="{{contactForm.email.vars.id}}">
-            {% else %}
-                <input type="email" name="{{contactForm.email.vars.full_name}}" class="form-control" id="{{contactForm.email.vars.id}}">
-                
-            {% endif %}
-                <label for="{{contactForm.email.vars.id}}">Email</label>
-                {{ form_errors(contactForm.email)}} 
-                {% do contactForm.email.setRendered %}
             </div>
-
-            <div class="form-floating mb-3">
-                <textarea name="{{contactForm.message.vars.full_name}}" class="form-control" id="{{contactForm.message.vars.id}}"></textarea>
-                <label for="{{contactForm.message.vars.id}}">Message</label>
-                {{ form_errors(contactForm.message)}} 
-                {% do contactForm.message.setRendered %}
-            </div>
-
-            <button type="submit" class="btn btn-primary submit-contact">Envoyer</button>
-
-        {{ form_end(contactForm) }}
-    
-    </div>
+        </div>
     </section>
 
 {% endblock %}

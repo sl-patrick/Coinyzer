@@ -37,7 +37,7 @@ class Cryptocurrencies
     private $logo;
     
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", length=1000, nullable=true)
      */
     private $description;
 
@@ -65,11 +65,6 @@ class Cryptocurrencies
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updated_at;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $published;
 
     /**
      * @ORM\OneToMany(targetEntity=CryptocurrencyData::class, mappedBy="cryptocurrencies", orphanRemoval=true, cascade={"persist", "remove"})
@@ -130,12 +125,12 @@ class Cryptocurrencies
 
     public function getDescription(): ?string
     {
-        return $this->description;
+        return strip_tags($this->description);
     }
 
     public function setDescription(?string $description): self
     {
-        $this->description = $description;
+        $this->description = htmlspecialchars(strip_tags($description));
 
         return $this;
     }
@@ -196,18 +191,6 @@ class Cryptocurrencies
     public function setUpdatedAt(?\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function getPublished(): ?bool
-    {
-        return $this->published;
-    }
-
-    public function setPublished(bool $published): self
-    {
-        $this->published = $published;
 
         return $this;
     }

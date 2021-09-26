@@ -5,7 +5,6 @@ namespace App\Controller\Admin;
 use App\Entity\Cryptocurrencies;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
@@ -20,14 +19,12 @@ class CryptocurrenciesCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            // IdField::new('id'),
             TextField::new('name'),
             TextField::new('fullname'),
             TextEditorField::new('description'),
             UrlField::new('website'),
             UrlField::new('source_code'),
             UrlField::new('whitepaper'),
-            BooleanField::new('published')->setFormTypeOptionIfNotSet('label_attr.class', 'switch-custom'),
         ];
     }
     

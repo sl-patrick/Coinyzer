@@ -1,6 +1,12 @@
-let btn = document.querySelectorAll('.add-watchlist');
+let buttonWatchlist = document.querySelectorAll('.add-watchlist');
+let errorMessage = document.querySelector('.error-favorite');
+let closeErrorMessage = document.querySelector('.error-close');
 
-btn.forEach(element => {
+closeErrorMessage.addEventListener('click', function() {
+    errorMessage.classList.add("hidden");   
+});
+
+buttonWatchlist.forEach(element => {
     element.addEventListener('click', function(e) {
         e.preventDefault();
         let url = this.href;
@@ -10,18 +16,13 @@ btn.forEach(element => {
         })
         .then(function(response) {
             if (response.status !== 200) {
-                return response.text().then(function(text) {
-
-                    let value = JSON.parse(text);
-                    console.log(value.message);
-                });
-                // alert('Connectez-vous');
-
+    
+                errorMessage.classList.remove("hidden");
+            
             } else if (response.status === 200) {
                 return response.text().then(function(text) {
 
                     let value = JSON.parse(text);
-                    console.log(value.message);
                     let state = element.children[0].classList;
 
                     if (value.message === 'add' || value.message === 'create and add' ) {

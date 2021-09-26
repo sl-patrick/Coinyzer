@@ -1,18 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
+{% block title %}Réinitialiser votre mot de passe{% endblock %}
 
-{% block body %}
-    {% include "./components/nav.html.twig" %}
-    <section class="h-100 d-flex flex-column justify-content-center text-center">
+{% block content %}
+    <section class="h-100 wrapper">
         <div class="container">
-            <div class="row">
-                <div class="col">
-                    <h1>Reset your password</h1>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2>Réinitialiser votre mot de passe</h2>
 
                     {{ form_start(resetForm) }}
-                        {{ form_row(resetForm.plainPassword) }}
-                        <button class="btn btn-primary">Reset password</button>
+                        <pre>
+                            {{ dump(resetForm) }}
+                        </pre>
+
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control required" id="change_password_form_plainPassword_first" name="change_password_form[plainPassword][first]">
+                            <label for="change_password_form_plainPassword_first" class="form-label required">Nouveau mot de passe</label>
+                            {{ form_errors(resetForm.plainPassword.first) }}
+                            {% do resetForm.plainPassword.first.setRendered %}
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control required" id="change_password_form_plainPassword_second" name="change_password_form[plainPassword][second]">
+                            <label for="change_password_form_plainPassword_second" class="form-label required">Confimer le mot de passe</label>
+                            {{ form_errors(resetForm.plainPassword.second) }}
+                            {% do resetForm.plainPassword.second.setRendered %}
+                        </div>
+                        {{ form_widget(resetForm._token) }} 
+
+
+                        {# {{ form_row(resetForm.plainPassword) }} #}
+                        <button class="btn btn-primary">Réinitialiser</button>
                     {{ form_end(resetForm) }}
                 </div>
             </div>

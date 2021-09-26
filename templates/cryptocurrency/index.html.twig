@@ -2,14 +2,19 @@
 
 {% block title %}Coinyzer | Classements{% endblock %}
 
-{% block body %}
+{% block content %}
 
-    <section class="h-100 d-flex flex-column justify-content-center text-center">
+    <section class="h-100 wrapper">
         <div class="container">
+
+            <div class="error-favorite alert alert-danger alert-dismissible hidden" role="alert">
+                <a href="{{ path('app_login') }}" class="alert-link">Connectez-vous</a> pour ajouter des cryptomonnaies a vos favoris.
+                <button type="button" class="btn-close error-close" aria-label="Close"></button>
+            </div>
+
+            <button type="button" class="btn btn-primary refresh">Rafraîchir</button>
             
-            <button type="button" class="btn btn-primary refresh">refresh</button>
-            
-            <div class="table-responsive">
+            <div class="table-responsive mt-4">
                 {% include "./components/table_rank.html.twig" %}            	
             </div>
 
