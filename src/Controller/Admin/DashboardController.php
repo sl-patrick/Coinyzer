@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Cryptocurrencies;
+use App\Entity\Users;
 use App\Form\ChangePasswordFormType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -62,6 +63,7 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {        
         yield MenuItem::linkToCrud('Cryptomonnaies', 'fab fa-bitcoin fa-3x', Cryptocurrencies::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Utilisateur', 'fas fa-users fa-3x', Users::class)->setPermission('ROLE_ADMIN');
         yield MenuItem::linkToRoute('Retourner sur le site', 'fas fa-reply', 'app_home');    
     }
     
